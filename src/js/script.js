@@ -59,9 +59,10 @@
       thisProduct.data = data;
 
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordion();
-
-      console.log('new Product: ', thisProduct);
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
     }
 
     renderInMenu() {
@@ -75,11 +76,20 @@
       menuContainer.appendChild(thisProduct.element);
     }
 
+    getElements(){
+      const thisProduct = this;
+
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+    }
+
     initAccordion() {
       const thisProduct = this;
-      const clickableTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
 
-      clickableTrigger.addEventListener('click', function(e) {
+      thisProduct.accordionTrigger.addEventListener('click', function(e) {
         e.preventDefault();
 
         const activeProduct = document.querySelector('article.product.active');
@@ -91,15 +101,58 @@
         thisProduct.element.classList.toggle('active');
       });
     }
-  }
 
+    initOrderForm() {
+      const thisProduct = this;
+
+      thisProduct.form.addEventListener('submit', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+
+      for(let input of thisProduct.formInputs){
+        input.addEventListener('change', function(){
+          thisProduct.processOrder();
+        });
+      }
+
+      thisProduct.cartButton.addEventListener('click', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+    }
+
+
+    processOrder() {
+      const thisProduct = this;
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      let price = thisProduct.data.price;
+
+      for(let paramId in thisProduct.data.params) {
+        const param = thisProduct.data.params[paramId];
+
+        for(let optionId in param.options) {
+          const option = param.options[optionId];
+
+          if (formData[paramId].includes(optionId) && option.default) {
+            price -= 0;
+          } else if (!formData[paramId].includes(optionId) && option.default) {
+            price -= option.price;
+          } else if (formData[paramId].includes(optionId)) {
+            price += option.price;
+          }
+        }
+      }
+
+      thisProduct.priceElem.innerHTML = price;
+    }
+  }
 
   const app = {
 
-    initMenu: function(){
+    initMenu: function() {
       const thisApp = this;
 
-      console.log('thisAppData:', thisApp.data);
 
       for(let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
@@ -119,6 +172,9 @@
       console.log('classNames:', classNames);
       console.log('settings:', settings);
       console.log('templates:', templates);
+
+      thisApp.initData();
+      thisApp.initMenu();
 
       thisApp.initData();
       thisApp.initMenu();
