@@ -135,6 +135,7 @@
         for(let optionId in param.options) {
           const option = param.options[optionId];
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+          const optionImg = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
 
           if(optionSelected) {
 
@@ -144,6 +145,14 @@
           } else {
             if (option.default) {
               price -= option.price;
+            }
+          }
+
+          if (optionImg) {
+            if (optionSelected) {
+              optionImg.classList.add(classNames.menuProduct.imageVisible);
+            } else {
+              optionImg.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
         }
