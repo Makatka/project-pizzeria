@@ -310,7 +310,6 @@
       thisCart.products = [];
       thisCart.getElements(element);
       thisCart.initActions();
-
     }
 
     getElements(element) {
@@ -319,7 +318,6 @@
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper;
       thisCart.dom.productList = select.cart.productList;
-
     }
 
     initActions() {
