@@ -71,6 +71,11 @@
     cart: {
       defaultDeliveryFee: 20,
     },
+    db: {
+      url: '//localhost:3131',
+      products: 'products',
+      orders: 'orders',
+    },
   };
 
   const templates = {
@@ -107,19 +112,20 @@
     getElements(){
       const thisProduct = this;
 
-      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
-      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
-      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
-      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
-      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
-      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+      thisProduct.dom = {};
+      thisProduct.dom.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.dom.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.dom.formInputs = thisProduct.dom.form.querySelectorAll(select.all.formInputs);
+      thisProduct.dom.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.dom.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.dom.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.dom.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
     }
 
     initAccordion() {
       const thisProduct = this;
 
-      thisProduct.accordionTrigger.addEventListener('click', function(e) {
+      thisProduct.dom.accordionTrigger.addEventListener('click', function(e) {
         e.preventDefault();
 
         const activeProduct = document.querySelector('article.product.active');
@@ -135,18 +141,18 @@
     initOrderForm() {
       const thisProduct = this;
 
-      thisProduct.form.addEventListener('submit', function(event){
+      thisProduct.dom.form.addEventListener('submit', function(event){
         event.preventDefault();
         thisProduct.processOrder();
       });
 
-      for(let input of thisProduct.formInputs){
+      for(let input of thisProduct.dom.formInputs){
         input.addEventListener('change', function(){
           thisProduct.processOrder();
         });
       }
 
-      thisProduct.cartButton.addEventListener('click', function(event){
+      thisProduct.dom.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
         thisProduct.addToCart();
@@ -156,15 +162,15 @@
     initAmountWidget() {
       const thisProduct = this;
 
-      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
-      thisProduct.amountWidgetElem.addEventListener('updated', function () {
+      thisProduct.amountWidget = new AmountWidget(thisProduct.dom.amountWidgetElem);
+      thisProduct.dom.amountWidgetElem.addEventListener('updated', function () {
         thisProduct.processOrder();
       });
     }
 
     processOrder() {
       const thisProduct = this;
-      const formData = utils.serializeFormToObject(thisProduct.form);
+      const formData = utils.serializeFormToObject(thisProduct.dom.form);
       let price = thisProduct.data.price;
 
       for(let paramId in thisProduct.data.params) {
@@ -173,7 +179,7 @@
         for(let optionId in param.options) {
           const option = param.options[optionId];
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
-          const optionImg = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
+          const optionImg = thisProduct.dom.imageWrapper.querySelector(`.${paramId}-${optionId}`);
 
           if(optionSelected) {
 
@@ -197,7 +203,7 @@
       }
       thisProduct.priceSingle = price;
       price *= thisProduct.amountWidget.value;
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.dom.priceElem.innerHTML = price;
     }
 
     prepareCartProduct() {
@@ -215,7 +221,7 @@
 
     prepareCartProductParams() {
       const thisProduct = this;
-      const formData = utils.serializeFormToObject(thisProduct.form);
+      const formData = utils.serializeFormToObject(thisProduct.dom.form);
       const params = {};
 
       for(let paramId in thisProduct.data.params){
@@ -249,9 +255,7 @@
       const thisWidget = this;
 
       thisWidget.getElements(element);
-      //thisWidget.setValue(thisWidget.input.value ? thisWidget.input.value : settings.amountWidget.defaultValue);
-      thisWidget.setValue(settings.amountWidget.defaultValue);
-
+      thisWidget.setValue(thisWidget.input.value || settings.amountWidget.defaultValue);
       thisWidget.initActions(thisWidget);
     }
 
@@ -312,7 +316,6 @@
       thisCart.getElements(element);
       thisCart.initActions();
       thisCart.update();
-
     }
 
     getElements(element) {
@@ -325,10 +328,14 @@
       thisCart.dom.subtotalPrice = element.querySelector(select.cart.subtotalPrice);
       thisCart.dom.totalPrices = element.querySelectorAll(select.cart.totalPrice);
       thisCart.dom.totalnumber = element.querySelector(select.cart.totalNumber);
+      thisCart.dom.form = element.querySelector(select.cart.form);
+      thisCart.dom.phoneNumber  = element.querySelector(select.cart.phone);
+      thisCart.dom.address  = element.querySelector(select.cart.address);
     }
 
     initActions() {
       const thisCart = this;
+
       thisCart.dom.toggleTrigger.addEventListener('click', function () {
         (thisCart.dom.wrapper).classList.toggle(classNames.cart.wrapperActive);
       });
@@ -341,13 +348,48 @@
         thisCart.remove(event.detail.cartProduct);
       });
 
+      thisCart.dom.form.addEventListener('submit', function(e){
+        e.preventDefault();
+        thisCart.sendOrder();
+      });
+    }
 
+    sendOrder(){
+      const thisCart = this;
+      const url = settings.db.url + '/' + settings.db.orders;
+
+      const payload = {
+        address: thisCart.dom.address.value,
+        phone: thisCart.dom.phoneNumber.value,
+        totalPrice: thisCart.totalPrice,
+        subtotalPrice: thisCart.dom.subtotalPrice.innerHTML,
+        totalNumber: thisCart.dom.totalnumber.innerHTML,
+        deliveryFee: thisCart.dom.deliveryFee.innerHTML,
+        products: [],
+      };
+      for (let product of thisCart.products){
+        payload.products.push(product.getData());
+      }
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      };
+
+      fetch(url, options)
+        .then(function(response){
+          return response.json();
+        }).then(function(parsedResponse){
+          console.log('parseResponse', parsedResponse);
+        });
     }
 
     remove(cartProduct) {
       const thisCart = this;
 
-      console.log(cartProduct);
       cartProduct.dom.wrapper.remove();
 
       thisCart.products.splice((this.products.indexOf(cartProduct)), 1);
@@ -407,6 +449,7 @@
       thisCartProduct.getElements(element);
       thisCartProduct.initAmountWidget();
       thisCartProduct.initActions(thisCartProduct);
+      thisCartProduct.getData();
     }
 
     getElements(element){
@@ -419,6 +462,20 @@
       thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
     }
 
+    getData(){
+      const thisCartProduct = this;
+
+      const productSummary = {
+        id : thisCartProduct.id,
+        name : thisCartProduct.name,
+        amount : thisCartProduct.amount,
+        price : thisCartProduct.price,
+        priceSingle : thisCartProduct.priceSingle,
+        params : thisCartProduct.params,
+      };
+
+      return productSummary;
+    }
     initAmountWidget() {
       const thisCartProduct = this;
 
@@ -465,14 +522,28 @@
       const thisApp = this;
 
       for(let productData in thisApp.data.products){
-        new Product(productData, thisApp.data.products[productData]);
+        new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
       }
     },
 
     initData: function(){
       const thisApp = this;
 
-      thisApp.data = dataSource;
+      thisApp.data = {};
+      const url = settings.db.url + '/' + settings.db.products;
+
+      fetch(url)
+        .then(function(rawResponse){
+          return rawResponse.json();
+        })
+        .then(function(parsedResponse){
+          console.log('parsedResponse', parsedResponse);
+
+          thisApp.data.products = parsedResponse;
+          thisApp.initMenu();
+
+        });
+      console.log('thisApp.data', JSON.stringify(thisApp.data));
     },
 
     init: function(){
@@ -484,7 +555,6 @@
       console.log('templates:', templates);
 
       thisApp.initData();
-      thisApp.initMenu();
       thisApp.initCart();
     },
 
