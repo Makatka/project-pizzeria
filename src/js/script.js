@@ -156,6 +156,7 @@
         event.preventDefault();
         thisProduct.processOrder();
         thisProduct.addToCart();
+        console.log('klik');
       });
     }
 
