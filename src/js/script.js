@@ -105,7 +105,6 @@
       thisProduct.element = utils.createDOMFromHTML(generatedHTML);
 
       const menuContainer = document.querySelector(select.containerOf.menu);
-
       menuContainer.appendChild(thisProduct.element);
     }
 
@@ -156,9 +155,13 @@
         event.preventDefault();
         thisProduct.processOrder();
         thisProduct.addToCart();
+        thisProduct.renderInMenu();
         console.log('klik');
+
       });
     }
+
+
 
     initAmountWidget() {
       const thisProduct = this;
