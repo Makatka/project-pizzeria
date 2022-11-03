@@ -1,6 +1,6 @@
-import {settings, select, classNames, templates} from '../settings.js';
+import {settings, select, classNames, templates} from '../Settings.js';
 import CartProduct from './CartProduct.js';
-import utils from '../utils.js';
+import utils from '../Utils.js';
 
 class Cart {
   constructor(element) {
@@ -45,6 +45,7 @@ class Cart {
     thisCart.dom.form.addEventListener('submit', function(e){
       e.preventDefault();
       thisCart.sendOrder();
+      thisCart.dom.wrapper.classList.remove(classNames.cart.wrapperActive);
 
     });
   }
@@ -95,7 +96,7 @@ class Cart {
 
   clear(){
     const thisCart = this;
-    for (let product of thisCart.products) {
+    for (let product of [...thisCart.products]) {
       product.remove();
     }
     thisCart.products = [];
