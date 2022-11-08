@@ -179,6 +179,9 @@
 <script id="template-booking-widget" type="text/x-handlebars-template">
   <div class="booking-widget">
     <h2 class="page__title no-spacing">Book a table</h2>
+    <div class="alert-success" role="alert" id="success-alert">
+      Twój stolik został zarezerwowany!
+    </div>
     <form class="booking-form">
       <div class="time-picker">
         <div class="date-picker">
@@ -194,9 +197,9 @@
       <div class="floor-plan">
         <div class="object entry">entry</div>
         <div class="object bar">bar</div>
-        <div class="object table" data-table="1">table-1</div>
-        <div class="object table table--round" data-table="2">table-2</div>
-        <div class="object table" data-table="3">table-3</div>
+        <div class="object table " data-table="1">1</div>
+        <div class="object table table--round" data-table="2">2</div>
+        <div class="object table" data-table="3">3</div>
       </div>
       <div class="booking-options"> <!-- options -->
         <label class="booking-option-title"> <!-- option-row -->
@@ -236,7 +239,7 @@
       <div class="order-confirmation">
         <input type="tel" name="phone" placeholder="Your phone">
         <input type="text" name="address" placeholder="Your address">
-        <button type="submit" class="btn-secondary">Book table</button>
+        <button type="submit" class="btn-secondary" id="liveAlertBtn">Book table</button>
       </div>
     </form>
   </div>
