@@ -173,11 +173,21 @@ class Booking {
 
     thisBooking.dom.bookingSubmit.addEventListener('click', function (e) {
       e.preventDefault();
+      thisBooking.removeSelectedClass();
       thisBooking.sendBooking();
       thisBooking.initAlert();
     });
   }
 
+  removeSelectedClass(){
+    const thisBooking = this;
+    for (let table of thisBooking.dom.tables) {
+      if(table.classList.contains(classNames.booking.tableSelected)){
+        table.classList.remove(classNames.booking.tableSelected);
+        table.classList.add(classNames.booking.tableBooked);
+      }
+    }
+  }
   initAlert() {
     const thisBooking = this;
     thisBooking.dom.alertSuccess.classList.add('active');
