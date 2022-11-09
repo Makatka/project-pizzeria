@@ -1,8 +1,8 @@
-import {templates, select, settings, classNames} from '../Settings.js';
+import {templates, select, settings, classNames} from '../settings.js';
 import AmountWidget from './AmountWidget.js';
 import DatePicker from './DatePicker.js';
 import HourPicker from './HourPicker.js';
-import utils from '../Utils.js';
+import utils from '../utils.js';
 
 class Booking {
   constructor(element) {
@@ -99,7 +99,7 @@ class Booking {
       if (typeof thisBooking.booked[date][hourBlock] == 'undefined') {
         thisBooking.booked[date][hourBlock] = [];
       }
-      thisBooking.booked[date][hourBlock].push(table);
+      thisBooking.booked[date][hourBlock].push(parseInt(table));
     }
   }
 
@@ -124,7 +124,7 @@ class Booking {
         tableId = parseInt(tableId);
       }
       if (
-        !allAvailable && thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId) > -1) {
+        !allAvailable && thisBooking.booked[thisBooking.date][thisBooking.hour].indexOf(tableId) > -1) {
         table.classList.add(classNames.booking.tableBooked);
       } else {
         table.classList.remove(classNames.booking.tableBooked);
@@ -175,10 +175,7 @@ class Booking {
     thisBooking.dom.bookingSubmit.addEventListener('click', function (e){
       e.preventDefault();
       thisBooking.sendBooking();
-
-      const widgetContainer = document.querySelector(select.containerOf.booking);
-      const newBooking = new Booking(widgetContainer);
-      newBooking.initAlert();
+      thisBooking.initAlert();
     });
   }
 
