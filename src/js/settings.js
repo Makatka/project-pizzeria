@@ -51,7 +51,6 @@ export const select = {
     bookingSubmit: '.order-confirmation [type="submit"]',
     starters: 'input[type="checkbox"]',
     alert: '#success-alert',
-
   },
   nav: {
     links: '.main-nav a',
@@ -118,11 +117,11 @@ export const settings = {
     tableIdAttribute: 'data-table',
   },
   db: {
-    url: '//localhost:3131',
+    url: '//' + window.location.hostname + (window.location.hostname=='localhost' ? ':3131' : ''),
     products: 'products',
     orders: 'orders',
-    bookings: 'bookings',
-    events: 'events',
+    booking: 'booking',
+    event: 'event',
     dateStartParamKey: 'date_gte',
     dateEndParamKey: 'date_lte',
     notRepeatParam: 'repeat=false',
