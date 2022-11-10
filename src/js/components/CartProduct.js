@@ -1,4 +1,4 @@
-import {select} from '../Settings.js';
+import {select} from '../settings.js';
 import AmountWidget from './AmountWidget.js';
 
 class CartProduct {
