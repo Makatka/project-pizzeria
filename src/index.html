@@ -9,6 +9,8 @@
   <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="vendor/range-slider.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+  <link rel="stylesheet" href="vendor/flickity.css" media="screen">
   <link rel="stylesheet" href="css/style.css">
 
 </head>
@@ -22,6 +24,7 @@
         <h2 class="logo__subtitle">the best homemade Italian food</h2>
       </div>
       <div class="main-nav">
+        <a href="#home">Home</a>
         <a href="#order">Order</a>
         <a href="#booking">Booking</a>
       </div>
@@ -63,6 +66,9 @@
 </header>
 
 <div id="pages">
+  <section id="home">
+   <div class="home-wrapper container"></div>
+  </section>
   <section id="order">
     <div id="product-list" class="product-list container"></div>
   </section>
@@ -70,7 +76,76 @@
     <div class="booking-wrapper container"></div>
   </section>
 </div>
+<script id="template-home-page" type="text/x-handlebars-template">
+  <header class="header-wrapper">
+    <div class="header-wrapper__button"><a id="order-btn" href="#order" aria-hidden="true">Order online</a></div>
+    <div class="header-wrapper__button"><a id="booking-btn" href="#booking" aria-hidden="true">Book a table</a></div>
+  </header>
 
+  <div class="info-banner">
+    <h3 class="info-banner__header">Opening Hours:</h3>
+    <p class="info-banner__text">Tue-Sun, 12PM-12AM</p>
+  </div>
+
+  <div class="carousel main-carousel"  data-flickity='{ "autoPlay": true }'>
+    <div class="carousel__item carousel-cell">
+      <div class="carousel__item-image"></div>
+      <div class="carousel__item-content">
+        <h5>AMAZING Service1</h5>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscingasf asdf asdf  elit. Nunc dictum consectetur nisl sed elementum. </p>
+        <p>- Margaret Osborne</p>
+      </div>
+    </div>
+  <div class="carousel__item carousel-cell">
+    <div class="carousel__item-image"></div>
+    <div class="carousel__item-content">
+      <h5>AMAZING Service2</h5>
+      <p>Lorem ipsum dolor sit amet, consectetur adipad fasdf asdf aiscing elit. Nunc dictum consectetur nisl sed elementum. </p>
+      <p>- Margaret Osborne</p>
+    </div>
+  </div>
+  <div class="carousel__item carousel-cell">
+    <div class="carousel__item-image"></div>
+    <div class="carousel__item-content">
+      <h5>AMAZING Service3</h5>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dictum casdf asdf asdf onsectetur nisl sed elementum. </p>
+      <p>- Margaret Osborne</p>
+    </div>
+  </div>
+  </div>
+  <ul class="gallery">
+    <li class="gallery__item">
+      <span class="gallery__item-icon"><i class="fa-solid fa-heart"></i></span>
+      <span class="gallery__item-icon"><i class="fa-sharp fa-solid fa-share-nodes"></i></span>
+    </li>
+    <li class="gallery__item">
+      <span class="gallery__item-icon"><i class="fa-solid fa-heart"></i></span>
+      <span class="gallery__item-icon"><i class="fa-sharp fa-solid fa-share-nodes"></i></span>
+    </li>
+    <li class="gallery__item">
+      <span class="gallery__item-icon"><i class="fa-solid fa-heart"></i></span>
+      <span class="gallery__item-icon"><i class="fa-sharp fa-solid fa-share-nodes"></i></span>
+    </li>
+    <li class="gallery__item">
+      <span class="gallery__item-icon"><i class="fa-solid fa-heart"></i></span>
+      <span class="gallery__item-icon"><i class="fa-sharp fa-solid fa-share-nodes"></i></span>
+    </li>
+    <li class="gallery__item">
+      <span class="gallery__item-icon"><i class="fa-solid fa-heart"></i></span>
+      <span class="gallery__item-icon"><i class="fa-sharp fa-solid fa-share-nodes"></i></span>
+    </li>
+    <li class="gallery__item">
+      <span class="gallery__item-icon"><i class="fa-solid fa-heart"></i></span>
+      <span class="gallery__item-icon"><i class="fa-sharp fa-solid fa-share-nodes"></i></span>
+    </li>
+  </ul>
+  <div class="home__instagram-link">
+    <a href="#" aria-hidden="true">Viev more on instagram</a>
+  </div>
+
+
+
+</script>
 <script id="template-cart-product" type="text/x-handlebars-template">
   <li>
     <div class="widget-amount"> <!-- widget-amount -->
@@ -247,6 +322,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
 <script src="vendor/range-slider.min.js"></script>
+<script src="vendor/flickity.pkgd.js"></script>
 <script src="js/app.js" type="module"></script>
 </body>
 </html>

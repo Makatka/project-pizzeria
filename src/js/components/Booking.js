@@ -135,7 +135,6 @@ class Booking {
   }
 
   render(element) {
-
     const thisBooking = this;
     const generatedHTML = templates.bookingWidget();
 
@@ -167,22 +166,34 @@ class Booking {
       thisBooking.updateDOM();
     });
 
-    thisBooking.dom.tablesWrapper.addEventListener('click', function (e){
+    thisBooking.dom.tablesWrapper.addEventListener('click', function (e) {
       e.preventDefault();
       thisBooking.initTable(e);
     });
 
-    thisBooking.dom.bookingSubmit.addEventListener('click', function (e){
+    thisBooking.dom.bookingSubmit.addEventListener('click', function (e) {
       e.preventDefault();
+      thisBooking.removeSelectedClass();
       thisBooking.sendBooking();
       thisBooking.initAlert();
     });
   }
 
-  initAlert(){
+  removeSelectedClass(){
+    const thisBooking = this;
+    for (let table of thisBooking.dom.tables) {
+      if(table.classList.contains(classNames.booking.tableSelected)){
+        table.classList.remove(classNames.booking.tableSelected);
+        table.classList.add(classNames.booking.tableBooked);
+      }
+    }
+  }
+  initAlert() {
     const thisBooking = this;
     thisBooking.dom.alertSuccess.classList.add('active');
-    setTimeout(() => {thisBooking.dom.alertSuccess.classList.remove('active');}, 2000);
+    setTimeout(() => {
+      thisBooking.dom.alertSuccess.classList.remove('active');
+    }, 2000);
   }
 
   initTable(e) {
@@ -191,13 +202,14 @@ class Booking {
     for (let table of thisBooking.dom.tables) {
       table.classList.remove(classNames.booking.tableSelected);
     }
-    if(e){
+    if (e) {
       if (!e.target.classList.contains(classNames.booking.tableBooked)) {
         e.target.classList.add(classNames.booking.tableSelected);
         thisBooking.tableSelected = e.target.dataset.table;
       }
     }
   }
+
   sendBooking() {
     const thisBooking = this;
     const url = settings.db.url + '/' + settings.db.bookings;
@@ -213,8 +225,8 @@ class Booking {
       'address': thisBooking.dom.address.value,
     };
 
-    for (let starter of thisBooking.dom.starters){
-      if(starter.checked){
+    for (let starter of thisBooking.dom.starters) {
+      if (starter.checked) {
         bookload.starters.push(starter.value);
       }
     }
@@ -237,4 +249,5 @@ class Booking {
 
   }
 }
+
 export default Booking;
