@@ -37,9 +37,9 @@ class Booking {
     };
 
     const urls = {
-      booking: settings.db.url + '/' + settings.db.bookings + '?' + params.booking.join('&'),
-      eventsCurrent: settings.db.url + '/' + settings.db.events + '?' + params.eventsRepeat.join('&'),
-      eventsRepeat: settings.db.url + '/' + settings.db.events + '?' + params.eventsCurrent.join('&'),
+      booking: settings.db.url + '/' + settings.db.booking + '?' + params.booking.join('&'),
+      eventsCurrent: settings.db.url + '/' + settings.db.event + '?' + params.eventsRepeat.join('&'),
+      eventsRepeat: settings.db.url + '/' + settings.db.event + '?' + params.eventsCurrent.join('&'),
     };
 
     Promise.all([
@@ -212,7 +212,7 @@ class Booking {
 
   sendBooking() {
     const thisBooking = this;
-    const url = settings.db.url + '/' + settings.db.bookings;
+    const url = settings.db.url + '/' + settings.db.booking;
 
     const bookload = {
       'date': thisBooking.datePicker.value,
